@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "28440045759",
+    "project_id": "whasup-6c809",
+    "storage_bucket": "whasup-6c809.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:28440045759:android:dbdc9871df2475a9a5be0a",
+        "android_client_info": {
+          "package_name": "com.example.whasup"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDpCKtVG7cTkBpfVW_862zf53Ze0vctOgg"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
