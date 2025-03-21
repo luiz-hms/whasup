@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:whasup/pages/home_page.dart';
 import 'package:whasup/pages/login/register.dart';
 
 class Login extends StatefulWidget {

@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:whasup/models/user_model.dart';
+import 'package:whasup/pages/home_page.dart';
 
 class Register extends StatefulWidget {
   const Register({Key? key}) : super(key: key);
@@ -9,6 +12,62 @@ class Register extends StatefulWidget {
 
 class _RegisterState extends State<Register> {
   @override
+  TextEditingController _controllerNome = TextEditingController();
+  TextEditingController _controllerEmail = TextEditingController();
+  TextEditingController _controllerSenha = TextEditingController();
+  String _mensagemErro = "";
+  _validarCampos() {
+    String nome = _controllerNome.text;
+    String email = _controllerEmail.text;
+    String senha = _controllerSenha.text;
+
+    if (nome.isNotEmpty) {
+      if (email.isNotEmpty) {
+        if (senha.isNotEmpty) {
+          setState(() {
+            _mensagemErro = "";
+            UserModel userModel = UserModel();
+            userModel.nome = nome;
+            userModel.email = email;
+            userModel.senha = senha;
+            _cadasTrarUsuario(userModel);
+          });
+        } else {
+          setState(() {
+            _mensagemErro = "o nome precisa ter pelo menos 3 caracteres";
+          });
+        }
+      } else {
+        setState(() {
+          _mensagemErro = "o nome precisa ter pelo menos 3 caracteres";
+        });
+      }
+    } else {
+      setState(() {
+        _mensagemErro = "o nome precisa ter pelo menos 3 caracteres";
+      });
+    }
+  }
+
+  _cadasTrarUsuario(UserModel userModel) {
+    FirebaseAuth auth = FirebaseAuth.instance;
+    auth
+        .createUserWithEmailAndPassword(
+            email: userModel.email, password: userModel.senha)
+        .then((firebaseUser) {
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => HomePage(),
+        ),
+      );
+    }).catchError((error) {
+      setState(() {
+        _mensagemErro = "erro ao cadastrar usuario";
+      });
+    });
+  }
+
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
@@ -37,6 +96,7 @@ class _RegisterState extends State<Register> {
                 Padding(
                   padding: EdgeInsets.only(bottom: 32),
                   child: TextField(
+                    controller: _controllerNome,
                     autofocus: true,
                     keyboardType: TextInputType.emailAddress,
                     style: TextStyle(fontSize: 20),
@@ -52,6 +112,22 @@ class _RegisterState extends State<Register> {
                   ),
                 ),
                 TextField(
+                  controller: _controllerEmail,
+                  keyboardType: TextInputType.visiblePassword,
+                  style: TextStyle(fontSize: 20),
+                  decoration: InputDecoration(
+                    contentPadding: EdgeInsets.fromLTRB(32, 16, 32, 16),
+                    hintText: "E-mail",
+                    filled: true,
+                    fillColor: Colors.white,
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(32),
+                    ),
+                  ),
+                ),
+                TextField(
+                  controller: _controllerSenha,
+                  obscureText: true,
                   keyboardType: TextInputType.visiblePassword,
                   style: TextStyle(fontSize: 20),
                   decoration: InputDecoration(
@@ -67,7 +143,9 @@ class _RegisterState extends State<Register> {
                 Padding(
                   padding: EdgeInsets.only(top: 16, bottom: 20),
                   child: ElevatedButton(
-                    onPressed: () {},
+                    onPressed: () {
+                      _validarCampos();
+                    },
                     style: ElevatedButton.styleFrom(
                       backgroundColor: Colors.green,
                       padding: EdgeInsets.fromLTRB(32, 16, 32, 16),
@@ -79,6 +157,12 @@ class _RegisterState extends State<Register> {
                       "Cadastrar",
                       style: TextStyle(color: Colors.white, fontSize: 20),
                     ),
+                  ),
+                ),
+                Center(
+                  child: Text(
+                    _mensagemErro,
+                    style: TextStyle(color: Colors.redAccent, fontSize: 20),
                   ),
                 ),
               ],
