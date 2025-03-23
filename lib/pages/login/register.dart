@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:whasup/models/user_model.dart';
@@ -15,6 +16,7 @@ class _RegisterState extends State<Register> {
   TextEditingController _controllerNome = TextEditingController();
   TextEditingController _controllerEmail = TextEditingController();
   TextEditingController _controllerSenha = TextEditingController();
+  final GlobalKey<_RegisterState> myWidgetKey = GlobalKey();
   String _mensagemErro = "";
   _validarCampos() {
     String nome = _controllerNome.text;
@@ -55,12 +57,20 @@ class _RegisterState extends State<Register> {
         .createUserWithEmailAndPassword(
             email: userModel.email, password: userModel.senha)
         .then((firebaseUser) {
+      final contexts = myWidgetKey.currentContext;
+      FirebaseFirestore db = FirebaseFirestore.instance;
+      db
+          .collection("usuarios")
+          .doc(firebaseUser.user!.uid)
+          .set(userModel.toMap());
+      // if (contexts != null && contexts.mounted) {
       Navigator.push(
         context,
         MaterialPageRoute(
           builder: (context) => HomePage(),
         ),
       );
+      // }
     }).catchError((error) {
       setState(() {
         _mensagemErro = "erro ao cadastrar usuario";
@@ -102,7 +112,7 @@ class _RegisterState extends State<Register> {
                     style: TextStyle(fontSize: 20),
                     decoration: InputDecoration(
                       contentPadding: EdgeInsets.fromLTRB(32, 16, 32, 16),
-                      hintText: "E-mail",
+                      hintText: "Nome",
                       filled: true,
                       fillColor: Colors.white,
                       border: OutlineInputBorder(

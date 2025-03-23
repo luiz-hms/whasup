@@ -4,6 +4,12 @@ class UserModel {
   late String _email;
   late String _senha;
   UserModel();
+
+  Map<String, dynamic> toMap() {
+    Map<String, dynamic> map = {"nome": this.nome, "email": this.email};
+    return map;
+  }
+
   String get senha => _senha;
   set senha(String value) {
     _senha = value;
