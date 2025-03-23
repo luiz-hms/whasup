@@ -20,6 +20,8 @@ class _HomePageState extends State<HomePage>
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        backgroundColor: Colors.green,
+        elevation: 0,
         bottom: TabBar(
           indicatorWeight: 4,
           labelStyle: TextStyle(
