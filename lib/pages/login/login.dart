@@ -1,5 +1,5 @@
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_core/firebase_core.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:whasup/models/user_model.dart';
 import 'package:whasup/pages/home_page.dart';
@@ -15,6 +15,7 @@ class Login extends StatefulWidget {
 class _LoginState extends State<Login> {
   TextEditingController _controllerEmail = TextEditingController();
   TextEditingController _controllerSenha = TextEditingController();
+  final GlobalKey<_LoginState> myWidgetKey = GlobalKey();
   String _mensagemErro = "";
   _validarCampos() {
     String email = _controllerEmail.text;
@@ -41,17 +42,20 @@ class _LoginState extends State<Login> {
   }
 
   _logarUsuario(UserModel userModel) {
+    final contexts = myWidgetKey.currentContext;
     FirebaseAuth firebaseAuth = FirebaseAuth.instance;
     firebaseAuth
         .signInWithEmailAndPassword(
             email: userModel.email, password: userModel.senha)
         .then((firebaseUser) {
-      Navigator.push(
-        context,
-        MaterialPageRoute(
-          builder: (context) => HomePage(),
-        ),
-      );
+      if (contexts != null && contexts.mounted) {
+        Navigator.pushReplacement(
+          contexts,
+          MaterialPageRoute(
+            builder: (context) => HomePage(),
+          ),
+        );
+      }
     }).catchError((error) {
       setState(() {
         _mensagemErro = "falha ao autenticar";
@@ -61,14 +65,18 @@ class _LoginState extends State<Login> {
 
   Future<void> _verificaUsuarioLogado() async {
     FirebaseAuth firebaseAuth = FirebaseAuth.instance;
-    User? usuarioLogado = await firebaseAuth.currentUser;
+    final contexts = myWidgetKey.currentContext;
+    firebaseAuth.signOut();
+    User? usuarioLogado = firebaseAuth.currentUser;
     if (usuarioLogado != null) {
-      Navigator.push(
-        context,
-        MaterialPageRoute(
-          builder: (context) => HomePage(),
-        ),
-      );
+      if (contexts != null && contexts.mounted) {
+        Navigator.pushReplacement(
+          contexts,
+          MaterialPageRoute(
+            builder: (context) => HomePage(),
+          ),
+        );
+      }
     }
   }
 
