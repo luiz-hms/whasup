@@ -61,16 +61,16 @@ class _RegisterState extends State<Register> {
       FirebaseFirestore db = FirebaseFirestore.instance;
       db
           .collection("usuarios")
-          .doc(firebaseUser.user!.uid)
+          .doc(firebaseUser.user?.uid)
           .set(userModel.toMap());
-      // if (contexts != null && contexts.mounted) {
-      Navigator.push(
-        context,
-        MaterialPageRoute(
-          builder: (context) => HomePage(),
-        ),
-      );
-      // }
+      if (contexts != null && contexts.mounted) {
+        Navigator.pushReplacement(
+          contexts,
+          MaterialPageRoute(
+            builder: (context) => HomePage(),
+          ),
+        );
+      }
     }).catchError((error) {
       setState(() {
         _mensagemErro = "erro ao cadastrar usuario";
@@ -109,6 +109,7 @@ class _RegisterState extends State<Register> {
                     controller: _controllerNome,
                     autofocus: true,
                     keyboardType: TextInputType.emailAddress,
+                    textInputAction: TextInputAction.next,
                     style: TextStyle(fontSize: 20),
                     decoration: InputDecoration(
                       contentPadding: EdgeInsets.fromLTRB(32, 16, 32, 16),
@@ -123,7 +124,8 @@ class _RegisterState extends State<Register> {
                 ),
                 TextField(
                   controller: _controllerEmail,
-                  keyboardType: TextInputType.visiblePassword,
+                  keyboardType: TextInputType.emailAddress,
+                  textInputAction: TextInputAction.next,
                   style: TextStyle(fontSize: 20),
                   decoration: InputDecoration(
                     contentPadding: EdgeInsets.fromLTRB(32, 16, 32, 16),
@@ -139,6 +141,7 @@ class _RegisterState extends State<Register> {
                   controller: _controllerSenha,
                   obscureText: true,
                   keyboardType: TextInputType.visiblePassword,
+                  textInputAction: TextInputAction.done,
                   style: TextStyle(fontSize: 20),
                   decoration: InputDecoration(
                     contentPadding: EdgeInsets.fromLTRB(32, 16, 32, 16),
