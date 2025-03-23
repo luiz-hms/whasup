@@ -66,7 +66,7 @@ class _LoginState extends State<Login> {
   Future<void> _verificaUsuarioLogado() async {
     FirebaseAuth firebaseAuth = FirebaseAuth.instance;
     final contexts = myWidgetKey.currentContext;
-    firebaseAuth.signOut();
+    //firebaseAuth.signOut();
     User? usuarioLogado = firebaseAuth.currentUser;
     if (usuarioLogado != null) {
       if (contexts != null && contexts.mounted) {
@@ -113,6 +113,7 @@ class _LoginState extends State<Login> {
                     controller: _controllerEmail,
                     autofocus: true,
                     keyboardType: TextInputType.emailAddress,
+                    textInputAction: TextInputAction.next,
                     style: TextStyle(fontSize: 20),
                     decoration: InputDecoration(
                       contentPadding: EdgeInsets.fromLTRB(32, 16, 32, 16),
@@ -129,6 +130,7 @@ class _LoginState extends State<Login> {
                   controller: _controllerSenha,
                   obscureText: true,
                   keyboardType: TextInputType.visiblePassword,
+                  textInputAction: TextInputAction.done,
                   style: TextStyle(fontSize: 20),
                   decoration: InputDecoration(
                     contentPadding: EdgeInsets.fromLTRB(32, 16, 32, 16),
