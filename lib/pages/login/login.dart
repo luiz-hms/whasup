@@ -66,7 +66,7 @@ class _LoginState extends State<Login> {
   Future<void> _verificaUsuarioLogado() async {
     FirebaseAuth firebaseAuth = FirebaseAuth.instance;
     final contexts = myWidgetKey.currentContext;
-    //firebaseAuth.signOut();
+    //firebaseAuth.signOut();b
     User? usuarioLogado = firebaseAuth.currentUser;
     if (usuarioLogado != null) {
       if (contexts != null && contexts.mounted) {
